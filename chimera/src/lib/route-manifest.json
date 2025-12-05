@@ -1,0 +1,10 @@
+{
+  "routes": [
+    "/",
+    "/about",
+    "/dashboard",
+    "/shop/electronics/phones"
+  ],
+  "generatedAt": "2025-12-05T14:34:38.237Z",
+  "count": 4
+}

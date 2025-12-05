@@ -1,0 +1,8 @@
+# React components for dashboard
+# - GEOHealthScore.tsx
+# - RouteHealthPanel.tsx
+# - ContentAnalysisPanel.tsx
+# - SchemaCoveragePanel.tsx
+# - CitationNetworkPanel.tsx
+# - TopicClusterGraph.tsx
+# - AITrafficPanel.tsx

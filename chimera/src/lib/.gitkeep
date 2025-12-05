@@ -1,0 +1,10 @@
+# Core library modules
+# - tokenizer.ts
+# - semantic-engine.ts
+# - sitemap-manager.ts
+# - alias-manager.ts
+# - agent-detector.ts
+# - fact-density-analyzer.ts
+# - schema-generator.ts
+# - citation-monitor.ts
+# - topic-mapper.ts
