@@ -1,0 +1,200 @@
+# Implementation Plan: AI Search Optimization
+
+- [x] 1. Set up core interfaces and types
+  - [x] 1.1 Create TypeScript interfaces for all data models
+    - Create `src/lib/ai-search/types.ts` with all interfaces from design
+    - Include LLMsConfig, QuotableSnippet, CitationScore, AEOResult, DedupResult, AIManifest
+    - _Requirements: 1.1, 3.1, 4.1, 5.1, 6.1, 7.1_
+
+- [x] 2. Implement Semantic Synonym Dictionary
+  - [x] 2.1 Create synonym dictionary with built-in groups
+    - Create `src/lib/ai-search/synonym-dictionary.ts`
+    - Implement expand(), addSynonym(), getSimilarityWeight(), findGroup() methods
+    - Include built-in synonym groups (phone, buy, docs, auth, api, price, contact, about)
+    - _Requirements: 2.1, 2.2, 2.3, 2.4_
+  - [x] 2.2 Write property test for synonym expansion
+    - **Property 3: Synonym Expansion Completeness**
+    - **Validates: Requirements 2.1**
+  - [x] 2.3 Write property test for synonym weighting
+    - **Property 4: Synonym Match Weighting**
+    - **Validates: Requirements 2.5**
+  - [x] 2.4 Integrate synonym dictionary with existing semantic engine
+    - Update `src/lib/semantic-engine.ts` to use synonym expansion
+    - Weight synonym matches at 0.8x exact match
+    - _Requirements: 2.5, 2.6_
+
+- [x] 3. Implement Quotable Snippet Extractor
+  - [x] 3.1 Create snippet extractor core logic
+    - Create `src/lib/ai-search/snippet-extractor.ts`
+    - Implement extract(), scoreSnippet(), identifyCitationAnchors() methods
+    - Implement hasStatistic() with regex patterns for percentages, dollar amounts, multipliers
+    - Implement hasAttribution() to detect source citations
+    - _Requirements: 3.1, 3.2_
+  - [x] 3.2 Write property test for statistic identification
+    - **Property 5: Statistic Sentence Identification**
+    - **Validates: Requirements 3.1**
+  - [x] 3.3 Write property test for citation anchor flagging
+    - **Property 6: Citation Anchor Flagging**
+    - **Validates: Requirements 3.2**
+  - [x] 3.4 Implement snippet scoring and ranking
+    - Score based on: hasStatistic (30), isUnique (25), isSpecific (20), isConcise (15), hasAttribution (10)
+    - Prefer snippets under 280 characters
+    - Return top 5 snippets ordered by score
+    - _Requirements: 3.3, 3.4, 3.5_
+  - [x] 3.5 Write property test for snippet length preference
+    - **Property 7: Snippet Length Preference**
+    - **Validates: Requirements 3.3, 3.4**
+  - [x] 3.6 Write property test for top snippets limit
+    - **Property 8: Top Snippets Limit**
+    - **Validates: Requirements 3.5**
+  - [x] 3.7 Implement attribution suggestion logic
+    - Detect snippets lacking source attribution
+    - Generate suggestions for adding sources
+    - _Requirements: 3.6_
+  - [x] 3.8 Write property test for attribution suggestions
+    - **Property 9: Attribution Suggestion**
+    - **Validates: Requirements 3.6**
+
+- [x] 4. Checkpoint - Ensure all tests pass
+  - Ensure all tests pass, ask the user if questions arise.
+
+- [x] 5. Implement AEO Optimizer
+  - [x] 5.1 Create AEO optimizer core logic
+    - Create `src/lib/ai-search/aeo-optimizer.ts`
+    - Implement analyze(), extractFAQ(), extractHowTo(), findFeaturedSnippetCandidate()
+    - Implement countWords() helper
+    - _Requirements: 4.1, 4.2, 4.3_
+  - [x] 5.2 Implement FAQ schema extraction
+    - Detect Q&A patterns using regex (what/how/why questions, Q: format)
+    - Generate valid FAQPage schema with @context and @type
+    - _Requirements: 4.1_
+  - [x] 5.3 Write property test for FAQ schema extraction
+    - **Property 10: FAQ Schema Extraction**
+    - **Validates: Requirements 4.1**
+  - [x] 5.4 Implement HowTo schema extraction
+    - Detect numbered steps (1. 2. 3.) and "Step N:" patterns
+    - Generate valid HowTo schema with position numbers
+    - _Requirements: 4.2_
+  - [x] 5.5 Write property test for HowTo schema extraction
+    - **Property 11: HowTo Schema Extraction**
+    - **Validates: Requirements 4.2**
+  - [x] 5.6 Implement featured snippet candidate detection
+    - Find most concise answer paragraph
+    - Suggest condensing if over 50 words
+    - _Requirements: 4.3, 4.4_
+  - [x] 5.7 Write property test for featured snippet length warning
+    - **Property 12: Featured Snippet Length Warning**
+    - **Validates: Requirements 4.4**
+
+- [x] 6. Implement Citation Score Calculator
+  - [x] 6.1 Create citation calculator core logic
+    - Create `src/lib/ai-search/citation-calculator.ts`
+    - Implement calculate(), rankPages(), getRecommendations()
+    - _Requirements: 6.1, 6.2_
+  - [x] 6.2 Write property test for citation score range
+    - **Property 14: Citation Score Range**
+    - **Validates: Requirements 6.1**
+  - [x] 6.3 Implement weighted scoring
+    - Unique data: 40%, Source attribution: 20%, Quotable snippets: 20%, Schema coverage: 20%
+    - _Requirements: 6.2_
+  - [x] 6.4 Write property test for citation score weighting
+    - **Property 15: Citation Score Weighting**
+    - **Validates: Requirements 6.2**
+  - [x] 6.5 Implement recommendations for low scores
+    - Generate specific recommendations when score < 50
+    - Use recommendation templates from design
+    - _Requirements: 6.3_
+  - [x] 6.6 Write property test for low score recommendations
+    - **Property 16: Low Score Recommendations**
+    - **Validates: Requirements 6.3**
+  - [x] 6.7 Implement page ranking
+    - Rank pages by citation potential in descending order
+    - _Requirements: 6.5_
+  - [x] 6.8 Write property test for page ranking consistency
+    - **Property 17: Page Ranking Consistency**
+    - **Validates: Requirements 6.5**
+
+- [x] 7. Checkpoint - Ensure all tests pass
+  - Ensure all tests pass, ask the user if questions arise.
+
+- [x] 8. Implement Deduplication Detector
+  - [x] 8.1 Create dedup detector core logic
+    - Create `src/lib/ai-search/dedup-detector.ts`
+    - Implement analyze(), identifyCommodityPhrases(), findCitationAnchors()
+    - Include comprehensive list of commodity phrases (24+ phrases)
+    - _Requirements: 7.1, 7.4_
+  - [x] 8.2 Write property test for commodity phrase detection
+    - **Property 18: Commodity Phrase Detection**
+    - **Validates: Requirements 7.1**
+  - [x] 8.3 Implement low differentiation flagging
+    - Calculate commodity phrase percentage of total content
+    - Flag content when commodity phrases exceed 30%
+    - Generate suggestions for unique angles
+    - _Requirements: 7.2, 7.3_
+  - [x] 8.4 Write property test for low differentiation threshold
+    - **Property 19: Low Differentiation Threshold**
+    - **Validates: Requirements 7.2**
+  - [x] 8.5 Write property test for unique content highlighting
+    - **Property 20: Unique Content Highlighting**
+    - **Validates: Requirements 7.4**
+
+- [x] 9. Implement llms.txt Generator
+  - [x] 9.1 Create llms.txt generator core logic
+    - Create `src/lib/ai-search/llms-generator.ts`
+    - Implement generate(), extractQuickFacts(), formatRoutes()
+    - Use snippet extractor to find statistics for quick facts
+    - _Requirements: 1.1, 1.2, 1.3, 1.4_
+  - [x] 9.2 Write property test for llms.txt content completeness
+    - **Property 1: llms.txt Content Completeness**
+    - **Validates: Requirements 1.2, 1.3, 1.4**
+  - [x] 9.3 Implement quick facts extraction
+    - Extract sentences with statistics from page content
+    - Limit to maxQuickFacts from config
+    - _Requirements: 1.5_
+  - [x] 9.4 Write property test for quick facts extraction
+    - **Property 2: Quick Facts Extraction**
+    - **Validates: Requirements 1.5**
+  - [x] 9.5 Create API route for /llms.txt
+    - Create `src/app/llms.txt/route.ts`
+    - Return plain text with Content-Type: text/plain
+    - _Requirements: 1.7_
+
+- [x] 10. Implement AI Manifest Generator
+  - [x] 10.1 Create ai-manifest generator core logic
+    - Create `src/lib/ai-search/manifest-generator.ts`
+    - Implement generate(), extractIntents(), extractEntities()
+    - Extract intents from page actions (buy, contact, learn, etc.)
+    - Extract entities from page content (products, services, etc.)
+    - _Requirements: 5.1, 5.2, 5.3, 5.4_
+  - [x] 10.2 Write property test for ai-manifest content completeness
+    - **Property 13: AI Manifest Content Completeness**
+    - **Validates: Requirements 5.2, 5.3, 5.4**
+  - [x] 10.3 Create API route for /ai-manifest.json
+    - Create `src/app/ai-manifest.json/route.ts`
+    - Return valid JSON with Content-Type: application/json
+    - _Requirements: 5.5_
+
+- [x] 11. Checkpoint - Ensure all tests pass
+  - Ensure all tests pass, ask the user if questions arise.
+
+- [x] 12. Implement Dashboard AI Search Metrics
+  - [x] 12.1 Create AI Search Readiness component
+    - Create `src/components/AISearchReadiness.tsx`
+    - Display Citation Score, AEO Score, GEO Score separately
+    - _Requirements: 8.1, 8.2_
+  - [x] 12.2 Add llms.txt status display
+    - Show generation status and last update time
+    - _Requirements: 8.3_
+  - [x] 12.3 Add top quotable snippets display
+    - Show top snippets across the site with citation scores
+    - _Requirements: 8.4_
+  - [x] 12.4 Implement metric threshold highlighting
+    - Highlight metrics below threshold (50) with specific action items
+    - Use recommendation templates from citation calculator
+    - _Requirements: 8.5_
+  - [x] 12.5 Integrate AI Search Readiness into dashboard
+    - Add component to existing dashboard page at `/dashboard`
+    - _Requirements: 8.1_
+
+- [x] 13. Final Checkpoint - Ensure all tests pass
+  - Ensure all tests pass, ask the user if questions arise.

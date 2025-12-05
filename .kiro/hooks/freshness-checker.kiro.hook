@@ -1,0 +1,14 @@
+{
+  "enabled": true,
+  "name": "Freshness Checker",
+  "description": "Checks content freshness when updated. Suggests dateModified schema updates for GEO optimization.",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": ["chimera/src/app/**/page.tsx", "**/*.md"]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "Content was updated at {{filePath}}. Check if the page has Schema.org dateModified metadata. If not, suggest adding it. If it exists, remind the developer to update it to today's date. AI agents like Perplexity heavily weight content freshness - pages older than 90 days may be deprioritized. Use the analyze_freshness MCP tool if available to check staleness and velocity metrics."
+  }
+}

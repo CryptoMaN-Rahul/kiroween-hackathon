@@ -1,0 +1,14 @@
+{
+  "enabled": true,
+  "name": "Content Scannability Analyzer",
+  "description": "Analyzes content for AI scannability when saved. Uses MCP analyze_content_scannability tool to check AI readability.",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": ["chimera/src/app/**/page.tsx", "**/*.md", "**/*.mdx"]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "Content was edited at {{filePath}}. Use the analyze_content_scannability MCP tool to check AI readability. If score < 0.5, suggest specific improvements:\n- Add tables for comparative data\n- Convert paragraphs to bullet lists\n- Add statistics and specific numbers\n- Fix header hierarchy (H1 → H2 → H3)\n- Add JSON-LD structured data\n- Check for fluffy marketing copy and suggest factual alternatives"
+  }
+}

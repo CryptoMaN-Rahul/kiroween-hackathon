@@ -1,0 +1,14 @@
+{
+  "enabled": true,
+  "name": "Schema Auto-Generator",
+  "description": "Suggests JSON-LD schema when new pages are created. Uses MCP generate_schema tool for GEO optimization.",
+  "version": "1",
+  "when": {
+    "type": "fileCreated",
+    "patterns": ["chimera/src/app/**/page.tsx"]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "A new page was created at {{filePath}}. Analyze the page content and use the generate_schema MCP tool to create appropriate JSON-LD schema. Suggest where to add the schema in the page (typically in a <script type='application/ld+json'> tag or via Next.js metadata). Include E-E-A-T signals if author information is available."
+  }
+}

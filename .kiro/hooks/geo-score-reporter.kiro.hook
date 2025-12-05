@@ -1,0 +1,14 @@
+{
+  "enabled": true,
+  "name": "GEO Score Reporter",
+  "description": "Reports GEO Health Score after lib changes. Uses MCP calculate_geo_score tool to track optimization progress.",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": ["chimera/src/lib/**/*.ts"]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "A core library file was modified at {{filePath}}. Use the calculate_geo_score MCP tool to report the current GEO Health Score. The score combines:\n- Route Health (404 interception success)\n- Content Scannability (AI-readable content)\n- Schema Coverage (JSON-LD presence)\n- Citation Authority (earned media strength)\n\nIf any component scores dropped, highlight the regression and suggest fixes. Target score: 80+ for AI-optimized sites."
+  }
+}

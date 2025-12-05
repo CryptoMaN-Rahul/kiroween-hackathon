@@ -1,0 +1,17 @@
+{
+  "enabled": true,
+  "name": "Security Scanner",
+  "description": "Scans TypeScript files for potential security issues including API keys, tokens, credentials, hardcoded passwords, secrets, internal URLs, and database connection strings. Highlights risks and recommends using environment variables.",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "chimera/src/**/*.ts",
+      "chimera/src/**/*.tsx"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "Scan the edited TypeScript file for potential security vulnerabilities. Look for:\n\n1. **API Keys & Tokens**: Patterns like `api_key`, `apiKey`, `API_KEY`, `token`, `bearer`, `auth`, or strings that look like API keys (long alphanumeric strings, base64 encoded values)\n\n2. **Hardcoded Passwords & Secrets**: Variables named `password`, `secret`, `credential`, `private_key`, or similar with string literal values\n\n3. **Database Connection Strings**: MongoDB URIs, PostgreSQL connection strings, MySQL connections, Redis URLs, or any `://` patterns with credentials embedded\n\n4. **Internal URLs**: Hardcoded localhost URLs, internal IP addresses (10.x.x.x, 192.168.x.x, 172.16-31.x.x), staging/dev environment URLs\n\nFor each issue found:\n- Highlight the specific line and the security risk it poses\n- Explain why this is dangerous (e.g., exposure in version control, security breaches)\n- Suggest using environment variables via `process.env.VARIABLE_NAME` instead\n- Recommend security best practices like using `.env.local` files, adding sensitive patterns to `.gitignore`, and using secret management tools for production"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "enabled": true,
+  "name": "Test Scaffold Generator",
+  "description": "When a new TypeScript file is created in chimera/src/lib/**/*.ts, generates a corresponding property-based test scaffold in chimera/tests/property/ with fast-check tests covering range properties, invariant properties, and round-trip properties.",
+  "version": "1",
+  "when": {
+    "type": "fileCreated",
+    "patterns": [
+      "chimera/src/lib/**/*.ts"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "A new TypeScript file was created in chimera/src/lib/. Analyze the exported functions and their signatures in this file, then generate a corresponding property-based test scaffold.\n\nCreate a test file in chimera/tests/property/ with the naming convention: [filename].property.test.ts\n\nThe test file should include:\n1. Proper imports following project conventions:\n   - import { describe, it, expect } from 'vitest';\n   - import * as fc from 'fast-check';\n   - Import the functions being tested from the source file\n\n2. Property tests covering:\n   - **Range Properties**: Test that outputs stay within expected bounds (e.g., scores between 0-100, non-negative values)\n   - **Invariant Properties**: Test relationships that must always hold (e.g., array length constraints, type guarantees)\n   - **Round-Trip Properties**: For any serializers/parsers, verify parse(serialize(data)) equals original data\n\n3. Use fast-check with 100 iterations per property:\n   ```typescript\n   fc.assert(fc.property(generator, (input) => {\n     // property assertion\n   }), { numRuns: 100 });\n   ```\n\n4. Annotate each test with the feature and property pattern:\n   ```typescript\n   /**\n    * **Feature: [feature-name], Property N: [Property Name]**\n    * **Validates: [what it validates]**\n    */\n   ```\n\n5. Create appropriate fast-check generators (arbitraries) for the input types used by the exported functions."
+  }
+}

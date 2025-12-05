@@ -1,0 +1,28 @@
+{
+  "mcpServers": {
+    "chimera-citation-monitor": {
+      "command": "npm",
+      "args": [
+        "run",
+        "mcp:start"
+      ],
+      "cwd": "chimera",
+      "env": {
+        "NODE_ENV": "development",
+        "BRAND_TERMS": "Chimera,AI-First Edge,GEO Health"
+      },
+      "disabled": false,
+      "autoApprove": [
+        "analyze_content_scannability",
+        "generate_schema",
+        "get_citation_stats",
+        "calculate_geo_score",
+        "scan_citations",
+        "build_topic_clusters",
+        "analyze_information_gain",
+        "full_page_analysis"
+      ],
+      "disabledTools": []
+    }
+  }
+}
